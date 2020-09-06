@@ -4,7 +4,7 @@ class TasksApp extends React.Component {
     return (
       <>
         <TaskItems />
-        <TaskCreator addTask={this.handleAddTask} />
+        <TaskCreator />
       </>
     )
   }
