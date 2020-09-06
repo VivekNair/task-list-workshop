@@ -1,59 +1,134 @@
-const ENTER_KEY_CODE = 13
 
-const taskInput = document.getElementById('task')
-const taskList = document.getElementById('task-list')
+class TasksApp extends React.Component {
+  constructor(props) {
+    super(props)
 
-taskInput.addEventListener("keydown", event => {
-  if (event.keyCode === ENTER_KEY_CODE) {
-    event.preventDefault()
-    addTaskToList()
+    this.state = {
+      tasks: []
+    }
+
+    this.handleAddTask = this.handleAddTask.bind(this)
+    this.handleDeleteTask = this.handleDeleteTask.bind(this)
+    this.handleCheckTask = this.handleCheckTask.bind(this)
   }
-})
 
-/* Adds a new task item to the list, with the value from the
- * given input.
- *
- * Arguments:
- * taskInput -- the HTMLElement input tag
- */
-function addTaskToList() {
-  if (taskInput.value)  {
+  handleAddTask(newTask) {
+    const newTaskArray = this.state.tasks.slice()
+    newTaskArray.push(newTask)
 
-    // Create list parent
-    const li = document.createElement('li')
-    li.textContent = taskInput.value
+    this.setState({
+      tasks: newTaskArray,
+    })
+  }
 
-    // Create delete button
-    const deleteBn = document.createElement('span')
-    deleteBn.classList.add("delete")
+  handleDeleteTask(id) {
+    this.setState({
+      tasks: this.state.tasks.filter(task => task.id !== id)
+    })
+  }
 
-    li.appendChild(deleteBn)
+  handleCheckTask(id) {
+    const newTasks = this.state.tasks.slice()
+    const targetTask = newTasks.find(task => task.id === id)
 
-    // Create check button
-    const checkBn = document.createElement('span')
-    checkBn.classList.add("check")
+    targetTask.done = !targetTask.done
 
-    li.appendChild(checkBn)
+    this.setState({
+      tasks: newTasks
+    })
+  }
 
-    addTaskListeners(checkBn, deleteBn)
-    taskInput.value = ""
-    taskList.appendChild(li)
+  render() {
+    return (
+      <>
+        <TaskItems
+          handleDeleteTask={this.handleDeleteTask}
+          handleCheckTask={this.handleCheckTask}
+          tasks={this.state.tasks} />
+
+        <TaskCreator addTask={this.handleAddTask} />
+      </>
+    )
   }
 }
 
-/* Handles check/delete events for the given task.
- *
- * Arguments:
- * taskLi -- the HTMLElement li tag
- */
-function addTaskListeners(checkBn, deleteBn) {
-  checkBn.addEventListener('click', () => {
-    const li = checkBn.parentNode
-    li.classList.toggle('done')
-  })
+class TaskCreator extends React.Component {
+  render() {
+    return (
+      <div id="task-container">
+        <textarea id="task" name="task" placeholder="I need to..." onKeyDown={event => {
+          if (event.keyCode === 13) {
+            event.preventDefault()
 
-  deleteBn.addEventListener('click', () => {
-    const li = deleteBn.parentNode
-    li.parentNode.removeChild(li)
-  })
+            if (!event.target.value) {
+              return
+            }
+
+            this.props.addTask({
+              id: Math.random(),
+              content: event.target.value,
+              done: false,
+            })
+
+            event.target.value = ""
+          }
+        }}>
+        </textarea>
+      </div>
+    )
+  }
 }
+
+class TaskItems extends React.Component {
+  render() {
+    const tasks = this.props.tasks
+
+    return (
+      <div id="sidebar">
+        <h1>Task List</h1>
+        <p>Add tasks to your list by typing to the right and press-ing enter. You may then view pending tasks below.</p>
+
+        <ul id="task-list">
+          {tasks.map(task => (
+            <TaskListItem
+              handleDeleteTask={this.props.handleDeleteTask}
+              handleCheckTask={this.props.handleCheckTask}
+              task={task} />
+          ))}
+        </ul>
+      </div>
+    )
+  }
+}
+
+class TaskListItem extends React.Component {
+  render() {
+    const task = this.props.task
+
+    const isTaskDone = this.props.task.done
+
+    let listClass = ""
+    if (isTaskDone) {
+      listClass = "done"
+    }
+
+    return (
+      <li className={listClass}>
+        {task.content}
+
+        <span className="delete" onClick={() => {
+          this.props.handleDeleteTask(task.id)
+        }}></span>
+
+        <span className="check" onClick={() => {
+          this.props.handleCheckTask(task.id)
+        }}></span>
+      </li>
+    )
+  }
+}
+
+ReactDOM.render(
+  <TasksApp />,
+  document.getElementById('wrapper')
+)

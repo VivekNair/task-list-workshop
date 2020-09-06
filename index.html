@@ -8,24 +8,17 @@
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" />
+
+    <!-- Babel and React imports -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.11.0/babel.min.js"></script>
   </head>
 
   <body>
-    <div id="wrapper" class="cf">
-      <div id="sidebar">
-        <h1>Task List</h1>
-        <p>Add tasks to your list by typing to the right and press-ing enter. You may then view pending tasks below.</p>
-
-        <ul id="task-list"></ul>
-      </div> <!-- end #sidebar -->
-
-      <div id="task-container">
-        <!-- textarea for the user to add tasks -->
-        <textarea id="task" name="task" placeholder="I need to..."></textarea>
-      </div> <!-- end .task-container -->
-    </div> <!-- end #wrapper -->
+    <div id="wrapper"></div>
 
     <!-- JS -->
-    <script src="js/script.js"></script>
+    <script type="text/babel" src="js/script.js"></script>
   </body>
 </html>
