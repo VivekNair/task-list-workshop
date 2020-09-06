@@ -18,11 +18,24 @@ taskInput.addEventListener("keydown", event => {
  */
 function addTaskToList() {
   if (taskInput.value)  {
+
+    // Create list parent
     const li = document.createElement('li')
     li.textContent = taskInput.value
-    li.innerHTML += " <span class=\"delete\"></span> <span class=\"check\"></span>"
 
-    addTaskListeners(li)
+    // Create delete button
+    const deleteBn = document.createElement('span')
+    deleteBn.classList.add("delete")
+
+    li.appendChild(deleteBn)
+
+    // Create check button
+    const checkBn = document.createElement('span')
+    checkBn.classList.add("check")
+
+    li.appendChild(checkBn)
+
+    addTaskListeners(checkBn, deleteBn)
     taskInput.value = ""
     taskList.appendChild(li)
   }
@@ -33,14 +46,14 @@ function addTaskToList() {
  * Arguments:
  * taskLi -- the HTMLElement li tag
  */
-function addTaskListeners(li) {
-  const checkbox = li.querySelector('.check')
-  checkbox.addEventListener('click', () => {
-    li.classList.toggle('checked')
+function addTaskListeners(checkBn, deleteBn) {
+  checkBn.addEventListener('click', () => {
+    const li = checkBn.parentNode
+    li.classList.toggle('done')
   })
 
-  const deleteButton = li.querySelector('.delete')
-  deleteButton.addEventListener('click', () => {
+  deleteBn.addEventListener('click', () => {
+    const li = deleteBn.parentNode
     li.parentNode.removeChild(li)
   })
 }

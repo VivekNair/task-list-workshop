@@ -101,14 +101,14 @@ p {
 
 .check {
   margin-right: 10px;
-  background-image: url("../images/unchecked-checkbox.png");
+  background-image: url("../images/undone-checkbox.png");
 }
 
-.checked .check {
-  background-image: url("../images/checked-checkbox.png");
+.done .check {
+  background-image: url("../images/done-checkbox.png");
 }
 
-.checked {
+.done {
   text-decoration: line-through;
 }
 
